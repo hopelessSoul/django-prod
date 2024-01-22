@@ -1,12 +1,14 @@
-FROM python:3.11
+FROM python:3.8
 
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
-COPY ./ /app
-RUN pip install --upgrade pip "poetry==1.7.1"
-RUN poetry config virtualenvs.create false --local
-COPY pyproject.toml poetry.lock ./
-RUN poetry install
 
-CMD ["gunicorn", "mysite.mysite.wsgi:application", "--bind", "0.0.0.0:8000"]
+COPY requirements.txt requirements.txt
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+COPY mysite .
+
+CMD ["gunicorn", "mysite.wsgi:application", "--bind", "158.160.137.75:8000"]
